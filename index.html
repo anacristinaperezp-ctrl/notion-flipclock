@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flip Clock</title>
 
-<!-- Fuente para números -->
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-
-<!-- Fuente para labels -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
   --card:#3a3a3a;
   --text:#f5f5f5;
-  --line:rgba(255,255,255,0.35);
+  --line:rgba(255,255,255,0.28);
 }
 
 body{
@@ -23,38 +22,41 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
+  font-family:'Oswald', sans-serif;
 }
 
+/* MÁS PEGADAS */
 .clock{
   display:flex;
-  gap:14px;
+  gap:6px;
 }
 
+/* MÁS LARGUITAS Y MENOS REDONDAS */
 .card{
   position:relative;
-  width:150px;
+  width:125px;
   height:190px;
   background:var(--card);
-  border-radius:26px;
+  border-radius:18px;
   overflow:hidden;
 }
 
-/* números grandes */
+/* NÚMEROS */
 .big{
   position:absolute;
   inset:0;
   display:flex;
   align-items:center;
   justify-content:center;
-
-  font-family:'Bebas Neue', sans-serif;
-  font-size:140px;     /* esta fuente es más alta */
-  letter-spacing:2px;
   color:var(--text);
-  transform:translateY(-10px);
+  font-size:110px;
+  font-weight:700;
+  letter-spacing:-1px;
+  line-height:1;
+  transform:translateY(-6px);
 }
 
-/* línea central */
+/* LÍNEA CENTRAL */
 .card::after{
   content:"";
   position:absolute;
@@ -65,63 +67,65 @@ body{
   background:var(--line);
 }
 
-/* labels */
-.label-left{
+/* LABELS MÁS PEQUEÑOS */
+.label-left, .label-right{
   position:absolute;
-  left:16px;
-  bottom:14px;
-  font-family:'Inter', sans-serif;
-  font-size:16px;
-  font-weight:600;
-  color:var(--text);
-}
-
-.label-right{
-  position:absolute;
-  right:16px;
-  bottom:14px;
-  font-family:'Inter', sans-serif;
-  font-size:16px;
+  bottom:8px;
+  font-size:14px;
   font-weight:600;
   color:var(--text);
   text-transform:uppercase;
+  letter-spacing:0.5px;
 }
+
+.label-left{ left:12px; }
+.label-right{ right:12px; }
+
 </style>
 </head>
 
 <body>
-  <div class="clock">
-    <div class="card">
-      <div class="big" id="hh">00</div>
-      <div class="label-left" id="ampm">AM</div>
-    </div>
 
-    <div class="card">
-      <div class="big" id="mm">00</div>
-      <div class="label-right" id="day">SUNDAY</div>
-    </div>
+<div class="clock">
+  <div class="card">
+    <div class="big" id="hh">00</div>
+    <div class="label-left" id="ampm">AM</div>
   </div>
 
+  <div class="card">
+    <div class="big" id="mm">00</div>
+    <div class="label-right" id="day">MONDAY</div>
+  </div>
+</div>
+
 <script>
-function pad(n){ return n < 10 ? "0"+n : n; }
+function pad(n){
+  return n < 10 ? "0" + n : n;
+}
 
-function update(){
+function updateClock(){
   const now = new Date();
-  let h = now.getHours();
-  const ampm = h >= 12 ? "PM" : "AM";
-  h = h % 12 || 12;
 
-  const m = now.getMinutes();
-  const day = now.toLocaleDateString('en-US',{weekday:'long'}).toUpperCase();
+  let hours = now.getHours();
+  const ampm = hours >= 12 ? "PM" : "AM";
 
-  document.getElementById("hh").textContent = pad(h);
-  document.getElementById("mm").textContent = pad(m);
+  hours = hours % 12;
+  if(hours === 0) hours = 12;
+
+  const minutes = now.getMinutes();
+
+  const day = now.toLocaleDateString('en-US', {
+    weekday:'long'
+  }).toUpperCase();
+
+  document.getElementById("hh").textContent = pad(hours);
+  document.getElementById("mm").textContent = pad(minutes);
   document.getElementById("ampm").textContent = ampm;
   document.getElementById("day").textContent = day;
 }
 
-update();
-setInterval(update,1000);
+updateClock();
+setInterval(updateClock, 1000);
 </script>
 
 </body>
